@@ -1,4 +1,4 @@
-# OMDB-Movie Website
+# Movie - Driver Website
 
 # Overview
 This project is a web application that allows users to search for movies using the OMDB API and add them to their personalized playlists. The website ensures secure access and data management using JSON Web Tokens (JWT) for authentication and security.
@@ -31,7 +31,7 @@ This project is a web application that allows users to search for movies using t
 # Installation
 1. Clone the repository:
     ```sh
-    git clone https://github.com/akshitasaxena1309/OMDB-Movie-website.git
+    git clone https://github.com/PAREEKCHITRANSHU/Movie-Driver.git
     ```
 2. Navigate to the project directory:
     ```sh
