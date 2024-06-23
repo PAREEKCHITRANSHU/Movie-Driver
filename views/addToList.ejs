@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add List</title>
+    <!-- <link rel="stylesheet" href="/css/header.css" /> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/profilstyle.css" />
+  </head>
+  <style>
+    a {
+      color: white;
+    }
+
+    h1,
+    h4 {
+      text-align: center;
+      /* color: #550e5a; */
+      margin: 2%;
+    }
+    .btn-class {
+      /* width: 500px; */
+      background-color: #3498db;
+      color: #fff;
+      padding: 1%;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 15px;
+
+      margin: 10%;
+    }
+    .btn-class:hover {
+      background-color: #102f43;
+    }
+    .movie-img {
+      width: 40%;
+      /* height: 20%; */
+    }
+    @media screen and (max-width: 768px) {
+      .btn-class {
+        margin-left: 0%;
+        padding: 3%;
+        width: 100%;
+      }
+      .movie-img {
+        width: 100%;
+        height: 50%;
+      }
+    }
+  </style>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div
+          class="logo"
+          style="cursor: pointer"
+          onclick="window.location.href='/home'"
+        >
+          Movie Zone
+        </div>
+        <div class="nav-items">
+          <button id="playlist-btn" onclick="window.location.href='/addList'">
+            My Playlist
+          </button>
+
+          <button
+            style="background-color: #3498db"
+            id="logout-btn"
+            onclick="window.location.href='/logoutLink'"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+    </header>
+    <h1>Hello, <%=user.username%>!!!!</h1>
+    <h4 style="color: rgb(122, 116, 116)">Your MovieList is here.....</h4>
+    <div class="container" style="width: 40%">
+      <% let totalPrice = 0; %> <% if (user.cart.length > 0) { %> <% for (let i
+      = 0; i < cartWithMovies.length; i++) { %> <% const item =
+      cartWithMovies[i]; %>
+      <div class="accordion" id="accordionExample<%= i %>">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<%= i %>">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse<%= i %>"
+              aria-expanded="<%= i === 0 %>"
+              aria-controls="collapse<%= i %>"
+              style="font-weight: bold; text-transform: uppercase"
+            >
+              <%= item.title %>
+            </button>
+          </h2>
+          <div
+            id="collapse<%= i %>"
+            class="accordion-collapse collapse <%= i === 0 ? 'show' : '' %>"
+            data-bs-parent="#accordionExample<%= i %>"
+          >
+            <div class="accordion-body">
+              <img src=" <%= item.img %>" alt="" class="movie-img" srcset="" />
+              <button class="btn-class" onclick="deleteMovie('<%=item._id%>')">
+                Delete From Playlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %> <% } %>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      async function deleteMovie(movieId) {
+        const url = `/delete/${movieId}`;
+        try {
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to delete movie from cart");
+          }
+
+          const result = await response.json();
+          if (result.success) {
+            alert("Movie deleted successfully");
+            // Optionally, remove the item from the DOM or refresh the page
+            location.reload(); // Reload the page to reflect changes
+          } else {
+            alert("Failed to delete movie from cart");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred");
+        }
+      }
+    </script>
+  </body>
+</html>

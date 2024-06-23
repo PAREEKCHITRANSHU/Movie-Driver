@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Movie Zone</title>
+    <link rel="stylesheet" href="/profilstyle.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .search-box {
+        display: block;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 5%;
+        flex-direction: row;
+      }
+      .search-input {
+        width: 50%;
+        border: none;
+        border-radius: 5px;
+        padding: 1%;
+        font-size: medium;
+        text-align: center;
+      }
+      .search-btn {
+        margin-left: 2%;
+        padding: 1%;
+        border: none;
+        border-radius: 5px;
+        background-color: #3498db;
+        color: #fff;
+      }
+      .search-btn:hover {
+        background-color: #2d6530;
+      }
+      .product-grid {
+        margin-top: 3%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .product-card {
+        background-color: #fff;
+        padding: 10px 10px 5px 10px;
+        height: 400px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        width: 250px;
+        margin-bottom: 3%;
+      }
+
+      .product-image {
+        width: 100%;
+
+        height: 75%;
+        /* height: auto; */
+        border-radius: 8px;
+      }
+
+      .product-title {
+        margin: 10px 0;
+        font-size: 18px;
+        color: var(--primary-color, #2d6530);
+        text-align: center;
+      }
+
+      .product-description {
+        color: #555;
+      }
+
+      .product-link {
+        color: var(--accent-color, #f6e8f8);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .btn {
+        /* width: 500px; */
+        background-color: #3498db;
+        color: #fff;
+        padding: 1%;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 15px;
+        margin: 3%;
+      }
+      .btn:hover {
+        background-color: #102f43;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div
+          class="logo"
+          style="cursor: pointer"
+          onclick="window.location.href='/home'"
+        >
+          Movie Zone
+        </div>
+        <div class="nav-items">
+          <button id="playlist-btn" onclick="window.location.href='/addList'">
+            My Playlist
+          </button>
+
+          <button
+            style="background-color: #3498db"
+            id="logout-btn"
+            onclick="window.location.href='/logoutLink'"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="profile-container">
+        <h1>Welcome</h1>
+      </div>
+
+      <form action="/search" method="GET" class="search-box">
+        <input
+          class="search-input"
+          type="text"
+          name="title"
+          placeholder="Enter movie Title"
+        />
+        <button type="submit" class="search-btn">Search</button>
+      </form>
+
+      <div class="product-grid">
+        <% if (movies && movies.length > 0) { %> <% for (let k of movies) { %>
+        <div class="product-card" onclick="" style="cursor: pointer">
+          <img class="product-image" src="<%=k.Poster%>" alt="Product 1" />
+          <h3 class="product-title"><%=k.Title.substring(0, 20)%>...</h3>
+          <button
+            class="btn"
+            style="padding: 3%; width: 90%"
+            onclick="addToCart('<%=k.Title%>','<%=k.Poster%>')"
+          >
+            Add to Playlist
+          </button>
+        </div>
+        <% } %> <% } else if(error) { %>
+        <h3
+          style="
+            text-align: center;
+            width: 50%;
+            font-size: 1.2em;
+            line-height: 150%;
+            text-align: center;
+            color: rgb(62, 65, 63);
+            letter-spacing: 0.5px;
+          "
+        >
+          <%= error %>
+        </h3>
+        <% } %>
+      </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+      function addToCart(title, img) {
+        console.log(title);
+        fetch(`/addToCart`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title: title, img: img }), // Sending title and img in the request body
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error adding movie to cart");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data); // Handle the success response
+            alert("movie added to cart successfully!");
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error(error); // Handle the error response
+            window.location.href = "/";
+          });
+      }
+    </script>
+  </body>
+</html>
